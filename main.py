@@ -1,51 +1,67 @@
-# Code-Busters
 import tkinter as tk
-from tkinter import ttk
-import datetime
+from tkinter import messagebox
+import uuid
 
-# Create the main window
+class Patient:
+    def __init__(self, name, age, symptoms, emergency_contact):
+        self.id = str(uuid.uuid4().int)[:10]
+        self.name = name
+        self.age = age
+        self.symptoms = symptoms
+        self.emergency_contact = emergency_contact
+    
+    def display_info(self):
+        return "ID:" + self.id + "\nName:" + self.name + "\nAge:" + self.age + "\nSymptoms:" + self.symptoms + "\nEmergency Contact:" + self.emergency_contact
+
+def get_patient_info():
+    name = name_entry.get()
+    age = age_entry.get()
+    symptoms = symptoms_entry.get()
+    emergency_contact = emergency_contact_entry.get()
+    return Patient(name, age, symptoms, emergency_contact)
+
+def display_patient_info():
+    patient = get_patient_info()
+    messagebox.showinfo("Patient Information", patient.display_info())
+
+def save_patient_info():
+    patient = get_patient_info()
+    with open("patient_info.txt", "a") as file:
+        file.write(patient.display_info() + "\n")
+    messagebox.showinfo("Success", "Patient information saved successfully!")
+
 root = tk.Tk()
-root.title("Health Management Software")
-root.geometry("500x500")
+root.title("Patient Information")
+root.geometry("700x700")
 
-# Use a new font and a different theme
-font = ("Arial", 14)
-style = ttk.Style(root)
-style.theme_use("clam")
+# Style
+label_font = ('Helvetica', 14)
+entry_font = ('Helvetica', 16)
 
-# Define a function to handle emergency alerts
-def emergency_alert():
-    alert = tk.Toplevel(root)
-    alert.title("Emergency Alert")
-    alert.geometry("300x200")
-    tk.Label(alert, text="EMERGENCY ALERT!", font=("Helvetica", 16), foreground="red").pack()
-    tk.Button(alert, text="OK", command=alert.destroy, font=font).pack()
+name_label = tk.Label(root, text="Name:", font=label_font)
+name_label.pack(pady=10)
+name_entry = tk.Entry(root, font=entry_font)
+name_entry.pack(pady=10)
 
-# Define a function to handle appointment scheduling
-def schedule_appointment():
-    appointment = tk.Toplevel(root)
-    appointment.title("Appointment Scheduler")
-    appointment.geometry("400x300")
-    tk.Label(appointment, text="Appointment Date:", font=font).pack()
-    date = tk.Entry(appointment, font=font)
-    date.pack()
-    tk.Label(appointment, text="Appointment Time:", font=font).pack()
-    time = tk.Entry(appointment, font=font)
-    time.pack()
-    tk.Label(appointment, text="Appointment Description:", font=font).pack()
-    description = tk.Entry(appointment, font=font)
-    description.pack()
-    tk.Button(appointment, text="Save", command=lambda: save_appointment(date.get(), time.get(), description.get()), font=font).pack()
+age_label = tk.Label(root, text="Age:", font=label_font)
+age_label.pack(pady=10)
+age_entry = tk.Entry(root, font=entry_font)
+age_entry.pack(pady=10)
 
-# Define a function to save appointments to a file
-def save_appointment(date, time, description):
-    with open("appointments.txt", "a") as file:
-        file.write(f"{date} {time}: {description}\n")
-    appointment.destroy()
+symptoms_label = tk.Label(root, text="Symptoms:", font=label_font)
+symptoms_label.pack(pady=10)
+symptoms_entry = tk.Entry(root, font=entry_font)
+symptoms_entry.pack(pady=10)
 
-# Create the buttons for emergency alerts and appointment scheduling
-tk.Button(root, text="Emergency Alert", command=emergency_alert, font=font).pack()
-tk.Button(root, text="Schedule Appointment", command=schedule_appointment, font=font).pack()
+emergency_contact_label = tk.Label(root, text="Emergency Contact:", font=label_font)
+emergency_contact_label.pack(pady=10)
+emergency_contact_entry = tk.Entry(root, font=entry_font)
+emergency_contact_entry.pack(pady=10)
 
-# Start the main event loop
+display_button = tk.Button(root, text="Display Information", command=display_patient_info, font=label_font)
+display_button.pack(pady=10)
+
+save_button = tk.Button(root, text="Save Information", command=save_patient_info, font=label_font)
+save_button.pack(pady=20)
+
 root.mainloop()
